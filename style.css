@@ -1,0 +1,371 @@
+* {
+  box-sizing: border-box;
+  user-select: none;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #0A0A12; /* Deep space black */
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+  color: white;
+}
+
+#game-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#game-canvas {
+  /* Dimensions will be set via JS based on device */
+  background-color: transparent;
+  transform-origin: center center;
+  image-rendering: pixelated;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* =========================================
+   Splash Screen (Bharat App Studio)
+   ========================================= */
+#splash-screen {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #0A0A12;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.splash-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.splash-text {
+  opacity: 0;
+  animation: fadeIn 1s forwards;
+}
+
+.bharat-text {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 3rem;
+  letter-spacing: 0.5em;
+  margin: 0;
+  margin-right: -0.5em; /* Compensate for letter-spacing */
+  color: #FFFFFF;
+}
+
+.app-studio-text {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: 0.2em;
+  margin: 0.5rem 0 1.5rem 0;
+  color: #AAAAAA;
+}
+
+.tricolor-strokes {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stroke {
+  height: 8px;
+  border-radius: 4px;
+  width: 0;
+  /* Simulating a rough brush stroke */
+  border-top-right-radius: 12px 6px;
+  border-bottom-right-radius: 10px 8px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.saffron {
+  background-color: #E8A45C; /* hsl(28, 85%, 68%) */
+  animation: paintStroke 0.6s ease-out 0.2s forwards;
+}
+
+.white {
+  background-color: #F5F0E8; /* hsl(40, 30%, 95%) */
+  animation: paintStroke 0.6s ease-out 0.5s forwards;
+}
+
+.green {
+  background-color: #5DBF78; /* hsl(140, 50%, 55%) */
+  animation: paintStroke 0.6s ease-out 0.8s forwards;
+}
+
+@keyframes paintStroke {
+  to { width: 100%; }
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* =========================================
+   Main Menu
+   ========================================= */
+#main-menu {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(10, 10, 18, 0.85);
+  z-index: 500;
+}
+
+.game-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 4rem;
+  margin: 0;
+  text-shadow: 0 0 20px rgba(100, 150, 255, 0.8);
+}
+
+.tagline {
+  font-size: 1rem;
+  color: #F5F0E8;
+  margin-top: 5px;
+  margin-bottom: 40px;
+  position: relative;
+  display: inline-block;
+}
+
+.tagline::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #E8A45C 33%, #F5F0E8 33%, #F5F0E8 66%, #5DBF78 66%);
+  border-radius: 2px;
+}
+
+.menu-btn {
+  background: linear-gradient(to bottom, #2A3B66, #1A2B4C);
+  border: 2px solid #4A6B9C;
+  color: white;
+  padding: 15px 40px;
+  font-size: 1.5rem;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.menu-btn:hover {
+  background: linear-gradient(to bottom, #3A4B76, #2A3B5C);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.6), 0 0 15px rgba(74, 107, 156, 0.5);
+}
+
+/* =========================================
+   HUD
+   ========================================= */
+#hud {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 100;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hp-bar {
+  width: 200px;
+  height: 20px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.hp-fill {
+  width: 100%;
+  height: 100%;
+  background-color: #E8A45C;
+  transition: width 0.2s, background-color 0.2s;
+}
+
+.score {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 2rem;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.weapon-tier {
+  align-self: flex-start;
+  background: rgba(0,0,0,0.5);
+  padding: 5px 15px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.3);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+}
+
+/* =========================================
+   Level Overlays
+   ========================================= */
+#level-announcement {
+  position: absolute;
+  top: 30%;
+  width: 100%;
+  text-align: center;
+  z-index: 150;
+  animation: fadeInOut 3s ease-in-out forwards;
+}
+
+.ann-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 3rem;
+  margin: 0;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  color: #fff;
+}
+
+.ann-subtitle {
+  font-size: 1.5rem;
+  color: #E8A45C;
+  margin-top: 5px;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: scale(0.9); }
+  10% { opacity: 1; transform: scale(1); }
+  80% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.1); }
+}
+
+#level-complete {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(10, 10, 18, 0.9);
+  border: 2px solid #5DBF78;
+  border-radius: 10px;
+  padding: 40px;
+  text-align: center;
+  z-index: 250;
+  box-shadow: 0 0 30px rgba(93, 191, 120, 0.4);
+}
+
+.lc-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.5rem;
+  color: #fff;
+  margin: 0 0 10px 0;
+}
+
+.lc-stars {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  color: #FFD700;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+#next-level-countdown {
+  font-size: 1.2rem;
+  color: #AAAAAA;
+}
+
+/* =========================================
+   Mobile Controls
+   ========================================= */
+#mobile-controls {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 200;
+}
+
+#d-pad {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  width: 150px;
+  height: 150px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  pointer-events: auto;
+  opacity: 0.4;
+  transition: opacity 0.2s;
+}
+
+#d-pad:active {
+  opacity: 0.8;
+}
+
+.action-buttons {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: flex-end;
+  pointer-events: auto;
+}
+
+.mobile-btn {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  color: white;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.4;
+  transition: opacity 0.2s;
+}
+
+.mobile-btn:active {
+  opacity: 0.8;
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+#btn-fire {
+  width: 70px;
+  height: 70px;
+}
+
+#btn-bomb {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}

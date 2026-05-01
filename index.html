@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Stellar Fury</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@800&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <!-- Game Container -->
+    <div id="game-container">
+      <canvas id="game-canvas"></canvas>
+      
+      <!-- Splash Screen -->
+      <div id="splash-screen">
+        <div class="splash-content">
+          <div class="splash-text">
+            <h1 class="bharat-text">B H A R A T</h1>
+            <h2 class="app-studio-text">APP STUDIO</h2>
+          </div>
+          <div class="tricolor-strokes">
+            <div class="stroke saffron"></div>
+            <div class="stroke white"></div>
+            <div class="stroke green"></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Main Menu (Hidden initially) -->
+      <div id="main-menu" class="hidden">
+        <h1 class="game-title">STELLAR FURY</h1>
+        <p class="tagline">A Bharat App Studio Game</p>
+        <button id="btn-start" class="menu-btn">START GAME</button>
+      </div>
+
+      <!-- HUD (Hidden initially) -->
+      <div id="hud" class="hidden">
+        <div class="top-bar">
+          <div class="hp-bar"><div class="hp-fill"></div></div>
+          <div class="score">0</div>
+        </div>
+        <div class="weapon-tier">Weapon: Tier 1</div>
+      </div>
+
+      <!-- Level / Wave Announcement -->
+      <div id="level-announcement" class="hidden">
+        <h2 class="ann-title">LEVEL 1</h2>
+        <h3 class="ann-subtitle">First Contact</h3>
+      </div>
+
+      <!-- Level Complete (Auto-continue) -->
+      <div id="level-complete" class="hidden">
+        <h2 class="lc-title">LEVEL 1 CLEARED</h2>
+        <div class="lc-stars">⭐⭐⭐</div>
+        <div id="next-level-countdown">Starting in 5s</div>
+      </div>
+
+      <!-- Mobile Controls (Hidden initially, shown on mobile only) -->
+      <div id="mobile-controls" class="hidden">
+        <div id="d-pad">
+          <div class="d-up"></div>
+          <div class="d-right"></div>
+          <div class="d-down"></div>
+          <div class="d-left"></div>
+          <div class="d-center"></div>
+        </div>
+        <div class="action-buttons">
+          <button id="btn-bomb" class="mobile-btn">💣</button>
+          <button id="btn-fire" class="mobile-btn">🔥</button>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
