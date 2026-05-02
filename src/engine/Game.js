@@ -46,7 +46,20 @@ export class Game {
     this.assets.loadImage('bullet1_yellow', '/assets/Projectiles/spr_bullet1_yellow.png');
     
     this.assets.loadImage('bg_standard', '/assets/Backgrounds/spr_sky_standard.png');
-    this.assets.loadImage('bg_stars', '/assets/Backgrounds/spr_overlay_sky_stars1.png');
+    this.assets.loadImage('bg_nebula1', '/assets/Backgrounds/spr_sky_nebula1.png');
+    this.assets.loadImage('bg_nebula2', '/assets/Backgrounds/spr_sky_nebula2.png');
+    this.assets.loadImage('bg_stars1', '/assets/Backgrounds/spr_overlay_sky_stars1.png');
+    this.assets.loadImage('bg_stars_blue', '/assets/Backgrounds/spr_overlay_sky_starsblue.png');
+    this.assets.loadImage('bg_stars_red', '/assets/Backgrounds/spr_overlay_sky_starsred.png');
+    
+    // Planets & Suns
+    this.assets.loadImage('planet_blue', '/assets/Backgrounds/spr_planet_blue.png');
+    this.assets.loadImage('planet_pink', '/assets/Backgrounds/spr_planet_pink.png');
+    this.assets.loadImage('planet_black', '/assets/Backgrounds/spr_planet_black.png');
+    this.assets.loadImage('star_red', '/assets/Backgrounds/spr_star_red.png');
+    this.assets.loadImage('star_green', '/assets/Backgrounds/spr_star_green.png');
+    this.assets.loadImage('cluster1', '/assets/Backgrounds/spr_cluster1.png');
+    this.assets.loadImage('cluster2', '/assets/Backgrounds/spr_cluster2.png');
     
     for(let i=1; i<=3; i++) {
       this.assets.loadImage(`spr_muzzle_bullet_blue_0${i}`, `/assets/Muzzle Flashes/Muzzle Bullet Blue/spr_muzzle_bullet_blue_0${i}.png`);
@@ -179,8 +192,10 @@ export class Game {
       if (!bullet.active) continue;
       if (bullet.x > this.player.x - this.player.width/2 && bullet.x < this.player.x + this.player.width/2 &&
           bullet.y > this.player.y - this.player.height/2 && bullet.y < this.player.y + this.player.height/2) {
-        bullet.active = false;
-        this.player.takeDamage(10);
+        if (this.player.invincibleTimer <= 0) {
+          bullet.active = false;
+          this.player.takeDamage(10);
+        }
       }
     }
 
@@ -191,8 +206,10 @@ export class Game {
       const dy = this.player.y - asteroid.y;
       const distance = Math.sqrt(dx * dx + dy * dy);
       if (distance < asteroid.radius + this.player.width / 2) {
-        asteroid.destroy();
-        this.player.takeDamage(20);
+        if (this.player.invincibleTimer <= 0) {
+          asteroid.destroy();
+          this.player.takeDamage(20);
+        }
       }
     }
 
@@ -201,8 +218,10 @@ export class Game {
       if (!enemy.active) continue;
       if (this.player.x > enemy.x - enemy.width/2 && this.player.x < enemy.x + enemy.width/2 &&
           this.player.y > enemy.y - enemy.height/2 && this.player.y < enemy.y + enemy.height/2) {
-        enemy.destroy();
-        this.player.takeDamage(20);
+        if (this.player.invincibleTimer <= 0) {
+          enemy.destroy();
+          this.player.takeDamage(20);
+        }
       }
     }
   }

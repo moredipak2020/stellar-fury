@@ -14,6 +14,13 @@
     <div id="game-container">
       <canvas id="game-canvas"></canvas>
       
+      <!-- Rotate Device Overlay -->
+      <div id="rotate-device" class="hidden">
+        <div class="rotate-icon">📱🔄</div>
+        <h2>Rotate Your Device</h2>
+        <p>Please switch to landscape mode for the best experience.</p>
+      </div>
+      
       <!-- Splash Screen -->
       <div id="splash-screen">
         <div class="splash-content">
@@ -29,10 +36,31 @@
         </div>
       </div>
       
+      <!-- Controls Screen (Shown after splash) -->
+      <div id="controls-screen" class="hidden">
+        <h1 class="screen-title">HOW TO PLAY</h1>
+        <div class="controls-container">
+          <div class="control-group">
+            <h3>PC / Keyboard</h3>
+            <p><strong>↑ ↓ ← →</strong> : Move Ship</p>
+            <p><strong>Left Ctrl</strong> : Fire Weapon</p>
+            <p><strong>Left Shift</strong> : Deploy Bomb</p>
+          </div>
+          <div class="control-group">
+            <h3>Mobile / Touch</h3>
+            <p><strong>D-Pad</strong> : Move Ship</p>
+            <p><strong>🔥 Button</strong> : Fire Weapon</p>
+            <p><strong>💣 Button</strong> : Deploy Bomb</p>
+          </div>
+        </div>
+        <button id="btn-next" class="menu-btn">NEXT</button>
+      </div>
+
       <!-- Main Menu (Hidden initially) -->
       <div id="main-menu" class="hidden">
         <h1 class="game-title">STELLAR FURY</h1>
         <p class="tagline">A Bharat App Studio Game</p>
+        <p class="nostalgic-text">~ Nostalgic vibes reloaded ~</p>
         <button id="btn-start" class="menu-btn">START GAME</button>
       </div>
 
@@ -41,6 +69,7 @@
         <div class="top-bar">
           <div class="hp-bar"><div class="hp-fill"></div></div>
           <div class="score">0</div>
+          <div class="lives">Lives: 3</div>
         </div>
         <div class="weapon-tier">Weapon: Tier 1</div>
       </div>
@@ -56,6 +85,13 @@
         <h2 class="lc-title">LEVEL 1 CLEARED</h2>
         <div class="lc-stars">⭐⭐⭐</div>
         <div id="next-level-countdown">Starting in 5s</div>
+      </div>
+
+      <!-- Game Over -->
+      <div id="game-over" class="hidden">
+        <h2 class="game-over-title">GAME OVER</h2>
+        <p class="game-over-subtitle">The Fury Has Fallen</p>
+        <button id="btn-restart" class="menu-btn" onclick="location.reload()">TRY AGAIN</button>
       </div>
 
       <!-- Mobile Controls (Hidden initially, shown on mobile only) -->

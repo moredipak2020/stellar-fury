@@ -15,6 +15,8 @@ export class Player {
     this.shield = 0; // 0 to 100
     this.weaponTier = 1;
     this.maxWeaponTier = 7;
+    this.lives = 3;
+    this.invincibleTimer = 0;
     
     this.bullets = [];
     this.fireTimer = 0;
@@ -38,6 +40,8 @@ export class Player {
   }
 
   takeDamage(amount) {
+    if (this.invincibleTimer > 0) return; // iFrames
+
     if (this.shield > 0) {
       this.shield -= amount;
       if (this.shield < 0) {
@@ -47,6 +51,9 @@ export class Player {
     } else {
       this.hp -= amount;
     }
+    
+    // Trigger iFrames (0.5s for normal hit)
+    this.invincibleTimer = 500;
     
     // Play hit sound (todo)
     this.updateHUD();
@@ -60,11 +67,27 @@ export class Player {
     if (this.game.levelManager) {
       this.game.levelManager.stats.deaths++;
     }
+    
+    this.lives--;
+    this.updateHUD();
+    
+    if (this.lives <= 0) {
+      // Game Over
+      if (this.game.gameOver) {
+        this.game.gameOver();
+      } else {
+        this.game.stop();
+        const go = document.getElementById('game-over');
+        if (go) go.classList.remove('hidden');
+      }
+      return;
+    }
+
     // Mercy logic: drop 2 tiers
     this.weaponTier = Math.max(1, this.weaponTier - 2);
     this.hp = this.maxHp;
+    this.invincibleTimer = 3000; // 3 seconds invincibility on respawn
     this.updateHUD();
-    // In phase 2 we do actual game over / last chance
   }
 
   applyPowerUp(type) {
@@ -91,9 +114,16 @@ export class Player {
     }
     const weaponEl = document.querySelector('.weapon-tier');
     if (weaponEl) weaponEl.innerText = `Weapon: Tier ${this.weaponTier}`;
+    
+    const livesEl = document.querySelector('.lives');
+    if (livesEl) livesEl.innerText = `Lives: ${this.lives}`;
   }
 
   update(deltaTime) {
+    if (this.invincibleTimer > 0) {
+      this.invincibleTimer -= deltaTime;
+    }
+
     // Movement
     if (this.game.input.keys.up) this.y -= this.speed * (deltaTime / 1000);
     if (this.game.input.keys.down) this.y += this.speed * (deltaTime / 1000);
@@ -178,6 +208,13 @@ export class Player {
       const muzzleImg = assets.getImage(this.muzzleFrames[this.muzzleIndex]);
       if (muzzleImg) {
         ctx.drawImage(muzzleImg, this.x - 16, this.y - this.height/2 - 32, 32, 32);
+      }
+    }
+
+    // Blink if invincible
+    if (this.invincibleTimer > 0) {
+      if (Math.floor(this.invincibleTimer / 100) % 2 === 0) {
+        return; // skip drawing ship to blink
       }
     }
 

@@ -31,6 +31,9 @@ export class LevelManager {
     this.waveQueue = [...this.levelData.waves];
     this.stats = { enemiesSpawned: 0, enemiesKilled: 0, deaths: 0 };
     
+    this.game.background.setTheme(this.levelData.bg, this.levelData.stars);
+    this.game.background.props = []; // Clear old props
+    
     // Reset player HP each level
     if (this.game.player) {
       this.game.player.hp = this.game.player.maxHp || 100;
@@ -67,6 +70,8 @@ export class LevelManager {
           this.showAnnouncement('WAVE INCOMING', wave.text, 3000);
         } else if (wave.type === 'spawn') {
           this.activeSpawns.push({ ...wave, spawned: 0, lastSpawnTime: 0 });
+        } else if (wave.type === 'prop') {
+          this.game.background.addProp(wave.img, wave.x, wave.y, wave.speed, wave.scale, wave.blend);
         }
       }
 
@@ -138,4 +143,7 @@ export class LevelManager {
       const starsEl = panel.querySelector('.lc-stars');
       if (title) title.innerText = `LEVEL ${this.levelData.id} CLEARED`;
       if (starsEl) starsEl.innerHTML = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
-      panel.classList.remov
+      panel.classList.remove('hidden');
+    }
+  }
+}
