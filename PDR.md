@@ -180,7 +180,8 @@ On game launch, before the main menu, a **2.5-second splash screen** displays:
 ## 3. Asset Inventory (Already Available)
 
 ### Ships (Player + can repurpose for enemies)
-- **Ship 1** (Fighter): Gold / Purple / Red — *Player ship options*
+- **Hero Ships**: 5 custom modern designs (`hero_1` to `hero_5`) used by the player.
+- **Ship 1** (Fighter): Gold / Purple / Red — *Enemy scout / unlockable*
 - **Ship 2** (Interceptor): Gold / Purple / Red — *Elite enemy / unlockable*
 - **Ship 3** (Heavy): Gold / Purple / Red — *Boss escort / unlockable*
 
@@ -246,6 +247,8 @@ The game canvas dynamically adapts to the device screen:
 | **→ Arrow** | Move right |
 | **Ctrl** (Left) | Fire / Shoot primary weapon |
 | **Shift** (Left) | Deploy bomb (screen-clear) |
+| **S** | Cycle Player Ship (Visual Customization) |
+| **L** | Cycle Laser Weapon (Visual Customization) |
 | **P** | Pause |
 | **Esc** | Pause / Back to menu |
 
@@ -354,7 +357,7 @@ Power-ups drop from destroyed enemies (15% chance) and special crates.
 
 | Boss | Level | Name | HP | Mechanics |
 |------|-------|------|-----|-----------|
-| 1 | 4 | **Rock Titan** | 500 | Giant asteroid composite, spawns small rocks, weak spot rotates |
+| 1 | 4 | **Alien Mothership** | 500 | Giant alien craft, deploys interceptor streams, bombers, and kamikaze drone swarms |
 | 2 | 8 | **Nebula Wraith** | 800 | Cloaking phases, teleports, laser sweeps, fades in/out of nebula |
 | 3 | 12 | **Mine Lord** | 1200 | Deploys mine fields, shield phases, must destroy generators |
 | 4 | 16 | **Admiral Kron** | 2000 | Battleship, multi-turret, spawns fighters, has 3 phases |
@@ -373,28 +376,28 @@ Power-ups drop from destroyed enemies (15% chance) and special crates.
 - Hazards: Small asteroids (sparse)
 - Teaches: Movement, shooting, collecting power-ups
 - Power-ups: Weapon Up guaranteed, Health Pack ×2
-- Duration: ~5 min | Difficulty: ★☆☆☆☆
+- Duration: ~2.5 min | Difficulty: ★☆☆☆☆
 
 **Level 2: "Asteroid Alley"**
 - Enemies: Scouts + Drones introduced
 - Hazards: Medium asteroids that split, denser field
 - New mechanic: Asteroid splitting, enemy shooting
 - Power-ups: Shield introduced
-- Duration: ~6 min | Difficulty: ★★☆☆☆
+- Duration: ~2.75 min | Difficulty: ★★☆☆☆
 
 **Level 3: "Ambush Run"**
 - Enemies: Scouts + Drones, enemies enter from sides
 - Hazards: Mixed asteroid sizes, timed waves
 - New mechanic: Side-scrolling enemy entries, combo scoring
 - Power-ups: Speed Boost introduced, Bomb introduced
-- Duration: ~6 min | Difficulty: ★★☆☆☆
+- Duration: ~3 min | Difficulty: ★★☆☆☆
 
-**Level 4: BOSS — "Rock Titan"**
+**Level 4: BOSS — "Alien Mothership"**
 - Pre-boss: Gauntlet of asteroid waves
-- Boss: Giant rotating asteroid cluster, weak core exposed periodically
-- Phases: (1) Asteroid rain, (2) Spinning laser arms, (3) Enrage — faster spawns
+- Boss: Giant alien mothership
+- Phases: (1) Interceptor streams, (2) Target-lock drones, (3) Final kamikaze swarm
 - Reward: Ship upgrade cutscene, unlock Ship 2 color
-- Duration: ~7 min | Difficulty: ★★★☆☆
+- Duration: ~4 min | Difficulty: ★★★☆☆
 
 ### ACT II — NEBULA EXPANSE (Levels 5–8) ⏱️ ~28 min
 
@@ -403,28 +406,28 @@ Power-ups drop from destroyed enemies (15% chance) and special crates.
 - Hazards: Nebula visibility mechanic (fog overlay reduces view radius)
 - New mechanic: Limited visibility, enemies appear suddenly
 - Power-ups: Magnet introduced
-- Duration: ~6 min | Difficulty: ★★★☆☆
+- Duration: ~3.5 min | Difficulty: ★★★☆☆
 
 **Level 6: "Bomber's Reach"**
 - Enemies: Drones + Fighters + Bombers introduced
 - Hazards: Bomber spread-shots create bullet curtains
 - New mechanic: Bullet patterns to navigate
 - Power-ups: Score Multiplier introduced
-- Duration: ~7 min | Difficulty: ★★★☆☆
+- Duration: ~3.75 min | Difficulty: ★★★☆☆
 
 **Level 7: "Nebula Storm"**
 - Enemies: Mixed waves, increasing speed
 - Hazards: Nebula lightning (random screen-area damage zones)
 - New mechanic: Environmental hazards (telegraphed danger zones)
 - Special: Mid-level power-up crate convoy
-- Duration: ~7 min | Difficulty: ★★★★☆
+- Duration: ~3.75 min | Difficulty: ★★★★☆
 
 **Level 8: BOSS — "Nebula Wraith"**
 - Pre-boss: Stealth enemy wave (enemies cloak/decloak)
 - Boss: Phases between visible/invisible, laser sweep attacks
 - Phases: (1) Peek-a-boo shots, (2) Laser grid, (3) Clone split (2 copies)
 - Reward: Laser weapon unlock
-- Duration: ~8 min | Difficulty: ★★★★☆
+- Duration: ~4.5 min | Difficulty: ★★★★☆
 
 ### ACT III — DEAD ZONE (Levels 9–12) ⏱️ ~30 min
 

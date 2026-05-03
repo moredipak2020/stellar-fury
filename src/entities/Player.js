@@ -283,7 +283,7 @@ export class Player {
       this.muzzleIndex = 0;
       this.muzzleTimer = 0;
       // Play sound
-      if (this.game.audio) this.game.audio.playLaserSound();
+      if (this.game.audio) this.game.audio.playLaserSound(laserColor);
     }
 
     this.bullets.forEach(b => b.update(deltaTime));

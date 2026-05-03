@@ -60,6 +60,7 @@ export class Game {
     this.assets.loadImage('alien_creature_1', '/assets/new_aliens/alien_creature_1.png');
     this.assets.loadImage('alien_creature_2', '/assets/new_aliens/alien_creature_2.png');
     this.assets.loadImage('alien_creature_3', '/assets/new_aliens/alien_creature_3.png');
+    this.assets.loadImage('boss_nebula_wraith', '/assets/new_aliens/boss_nebula_wraith.png');
     
     this.assets.loadImage('bullet1_blue', '/assets/Projectiles/spr_bullet1_blue.png');
     this.assets.loadImage('bullet1_yellow', '/assets/Projectiles/spr_bullet1_yellow.png');

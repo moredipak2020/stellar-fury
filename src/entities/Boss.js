@@ -35,7 +35,14 @@ export class Boss {
       this.alpha = 1.0;
       this.teleportTimer = 3000;
       this.shootTimer = 0;
-      this.image = this.game.assets.images['ship2_purple'];
+      this.image = this.game.assets.getImage('boss_nebula_wraith');
+      
+      this.thrusterFrames = [];
+      for(let i=0; i<=15; i++) {
+        this.thrusterFrames.push(`thruster_loop_${i.toString().padStart(2, '0')}`);
+      }
+      this.thrusterFrameIndex = 0;
+      this.thrusterTimer = 0;
     }
   }
 
@@ -145,6 +152,12 @@ export class Boss {
           }
         }
       } else if (this.type === 'boss_nebula_wraith') {
+        this.thrusterTimer += deltaTime;
+        if (this.thrusterTimer > 30) {
+           this.thrusterFrameIndex = (this.thrusterFrameIndex + 1) % this.thrusterFrames.length;
+           this.thrusterTimer = 0;
+        }
+
         if (this.isClone && this.mainBoss.hp <= 0) {
            this.destroy();
         }
@@ -229,6 +242,19 @@ export class Boss {
       } else if (this.type === 'boss_nebula_wraith') {
          ctx.globalAlpha = this.alpha;
          ctx.rotate(Math.PI); // flip 180
+         
+         const thrusterName = this.thrusterFrames[this.thrusterFrameIndex];
+         if (thrusterName) {
+            const thrusterImg = this.game.assets.getImage(thrusterName);
+            if (thrusterImg) {
+               // Center large thruster
+               ctx.drawImage(thrusterImg, -30, this.height / 2 - 20, 60, 90);
+               // Left small thruster
+               ctx.drawImage(thrusterImg, -this.width / 2 + 20, this.height / 2 - 30, 30, 50);
+               // Right small thruster
+               ctx.drawImage(thrusterImg, this.width / 2 - 50, this.height / 2 - 30, 30, 50);
+            }
+         }
       }
       ctx.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
       ctx.globalAlpha = 1.0;
