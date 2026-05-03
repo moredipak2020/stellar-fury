@@ -62,11 +62,11 @@ export const LevelData = [
     id: 1,
     title: "First Contact",
     subtitle: "Frontier Belt",
-    parTime: 300000, // 5 minutes
+    parTime: 150000, // 2.5 minutes
     bg: null,
     stars: 'bg_stars1',
     waves: buildWaves({
-      duration: 300000,
+      duration: 150000,
       baseEnemyInterval: 8000,
       baseAsteroidInterval: 10000,
       asteroidSizes: ['small', 'medium'],
@@ -77,11 +77,11 @@ export const LevelData = [
     id: 2,
     title: "Asteroid Alley",
     subtitle: "Frontier Belt",
-    parTime: 360000, // 6 minutes
+    parTime: 165000, // 2.75 minutes
     bg: null,
     stars: 'bg_stars_blue',
     waves: buildWaves({
-      duration: 360000,
+      duration: 165000,
       baseEnemyInterval: 7000,
       baseAsteroidInterval: 6000,
       asteroidSizes: ['small', 'medium', 'large'],
@@ -92,11 +92,11 @@ export const LevelData = [
     id: 3,
     title: "Ambush Run",
     subtitle: "Frontier Belt",
-    parTime: 360000, // 6 minutes
+    parTime: 180000, // 3 minutes
     bg: null,
     stars: 'bg_stars_red',
     waves: buildWaves({
-      duration: 360000,
+      duration: 180000,
       baseEnemyInterval: 5000,
       baseAsteroidInterval: 8000,
       asteroidSizes: ['medium', 'large'],
@@ -107,20 +107,20 @@ export const LevelData = [
     id: 4,
     title: "Rock Titan",
     subtitle: "Boss Encounter",
-    parTime: 420000, // 7 minutes
+    parTime: 240000, // 4 minutes
     bg: null,
     stars: 'bg_stars_red',
     waves: (() => {
       let w = buildWaves({
-        duration: 380000,
+        duration: 180000,
         baseEnemyInterval: 5000,
         baseAsteroidInterval: 8000,
         asteroidSizes: ['medium', 'large'],
         hasDrones: true,
         hasFighters: true
       });
-      w.push({ type: 'announce', text: 'WARNING: ROCK TITAN INCOMING', time: 385000 });
-      w.push({ type: 'spawn', enemy: 'boss_rock_titan', count: 1, interval: 1000, time: 390000 });
+      w.push({ type: 'announce', text: 'WARNING: ROCK TITAN INCOMING', time: 185000 });
+      w.push({ type: 'spawn', enemy: 'boss_rock_titan', count: 1, interval: 1000, time: 190000 });
       w.sort((a, b) => a.time - b.time);
       return w;
     })()
@@ -129,12 +129,12 @@ export const LevelData = [
     id: 5,
     title: "Into the Fog",
     subtitle: "Nebula Expanse",
-    parTime: 360000,
+    parTime: 210000, // 3.5 minutes
     bg: 'bg_nebula1',
     stars: 'bg_stars_blue',
     fog: true,
     waves: buildWaves({
-      duration: 360000,
+      duration: 210000,
       baseEnemyInterval: 5000,
       baseAsteroidInterval: 7000,
       asteroidSizes: ['small', 'medium'],
@@ -146,12 +146,12 @@ export const LevelData = [
     id: 6,
     title: "Bomber's Reach",
     subtitle: "Nebula Expanse",
-    parTime: 420000,
+    parTime: 225000, // 3.75 minutes
     bg: 'bg_nebula1',
     stars: 'bg_stars_blue',
     fog: true,
     waves: buildWaves({
-      duration: 420000,
+      duration: 225000,
       baseEnemyInterval: 4500,
       baseAsteroidInterval: 8000,
       asteroidSizes: ['medium'],
@@ -164,13 +164,13 @@ export const LevelData = [
     id: 7,
     title: "Nebula Storm",
     subtitle: "Nebula Expanse",
-    parTime: 420000,
+    parTime: 225000, // 3.75 minutes
     bg: 'bg_nebula2',
     stars: 'bg_stars_blue',
     fog: true,
     lightning: true, // Environmental hazard
     waves: buildWaves({
-      duration: 420000,
+      duration: 225000,
       baseEnemyInterval: 4000,
       baseAsteroidInterval: 7000,
       asteroidSizes: ['medium', 'large'],
@@ -183,21 +183,21 @@ export const LevelData = [
     id: 8,
     title: "Nebula Wraith",
     subtitle: "Boss Encounter",
-    parTime: 480000,
+    parTime: 270000, // 4.5 minutes
     bg: 'bg_nebula2',
     stars: 'bg_stars_blue',
     fog: true,
     waves: (() => {
       let w = buildWaves({
-        duration: 400000,
+        duration: 210000,
         baseEnemyInterval: 4000,
         baseAsteroidInterval: 9000,
         asteroidSizes: ['small'],
         hasDrones: true,
         hasFighters: true
       });
-      w.push({ type: 'announce', text: 'WARNING: NEBULA WRAITH DETECTED', time: 405000 });
-      w.push({ type: 'spawn', enemy: 'boss_nebula_wraith', count: 1, interval: 1000, time: 410000 });
+      w.push({ type: 'announce', text: 'WARNING: NEBULA WRAITH DETECTED', time: 215000 });
+      w.push({ type: 'spawn', enemy: 'boss_nebula_wraith', count: 1, interval: 1000, time: 220000 });
       w.sort((a, b) => a.time - b.time);
       return w;
     })()
