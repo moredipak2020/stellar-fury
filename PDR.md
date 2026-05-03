@@ -249,8 +249,7 @@ The game canvas dynamically adapts to the device screen:
 | **Shift** (Left) | Deploy bomb (screen-clear) |
 | **S** | Cycle Player Ship (Visual Customization) |
 | **L** | Cycle Laser Weapon (Visual Customization) |
-| **P** | Pause |
-| **Esc** | Pause / Back to menu |
+| **Space / P / Esc** | Pause / Back to menu |
 
 > Diagonal movement works by holding two arrow keys simultaneously.
 
@@ -403,8 +402,8 @@ Power-ups drop from destroyed enemies (15% chance) and special crates.
 
 **Level 5: "Into the Fog"**
 - Enemies: Drones + Fighters introduced
-- Hazards: Nebula visibility mechanic (fog overlay reduces view radius)
-- New mechanic: Limited visibility, enemies appear suddenly
+- Hazards: Nebula visibility mechanic (fog overlay restricts global view)
+- New mechanic: Dynamic Multi-Lighting. Fog obscures standard enemies, but massive energy sources (like bosses) emit cinematic light auras that burn away the fog.
 - Power-ups: Magnet introduced
 - Duration: ~3.5 min | Difficulty: ★★★☆☆
 
@@ -424,8 +423,8 @@ Power-ups drop from destroyed enemies (15% chance) and special crates.
 
 **Level 8: BOSS — "Nebula Wraith"**
 - Pre-boss: Stealth enemy wave (enemies cloak/decloak)
-- Boss: Phases between visible/invisible, laser sweep attacks
-- Phases: (1) Peek-a-boo shots, (2) Laser grid, (3) Clone split (2 copies)
+- Boss: Phases between visible/invisible, sweeping laser arrays, dynamic pulsing plasma core
+- Phases: (1) Predictive Peek-a-boo shots (aims at future player pos), (2) Sine-wave sweeping laser grids, (3) Clone split (2 copies)
 - Reward: Laser weapon unlock
 - Duration: ~4.5 min | Difficulty: ★★★★☆
 
