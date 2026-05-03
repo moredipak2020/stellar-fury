@@ -26,8 +26,8 @@ export class Boss {
       
       this.image = this.game.assets.getImage('alien_mothership'); 
     } else if (this.type === 'nebula_wraith') {
-      this.width = 150;
-      this.height = 150;
+      this.width = 300;
+      this.height = 300;
       this.maxHp = 800;
       this.hp = this.maxHp;
       this.phase = 1;
@@ -261,11 +261,11 @@ export class Boss {
             const thrusterImg = this.game.assets.getImage(thrusterName);
             if (thrusterImg) {
                // Center large thruster
-               ctx.drawImage(thrusterImg, -30, this.height / 2 - 20, 60, 90);
+               ctx.drawImage(thrusterImg, -30, this.height / 2 - 40, 60, 90);
                // Left small thruster
-               ctx.drawImage(thrusterImg, -this.width / 2 + 20, this.height / 2 - 30, 30, 50);
+               ctx.drawImage(thrusterImg, -this.width / 2 + 50, this.height / 2 - 50, 30, 50);
                // Right small thruster
-               ctx.drawImage(thrusterImg, this.width / 2 - 50, this.height / 2 - 30, 30, 50);
+               ctx.drawImage(thrusterImg, this.width / 2 - 80, this.height / 2 - 50, 30, 50);
             }
          }
       }
