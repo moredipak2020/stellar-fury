@@ -14,7 +14,7 @@ export class Bullet {
   update(deltaTime) {
     this.y -= this.speed * (deltaTime / 1000);
     this.x += this.speedX * (deltaTime / 1000);
-    if (this.y < -this.height || this.x < -this.width || this.x > this.game.canvas.width + this.width) {
+    if (this.y < -this.height || this.y > this.game.canvas.height + this.height || this.x < -this.width || this.x > this.game.canvas.width + this.width) {
       this.active = false;
     }
   }
