@@ -17,6 +17,13 @@ export class AudioEngine {
     }
   }
 
+  playSound(name) {
+    if (name === 'explosion') this.playExplosionSound();
+    else if (name === 'laser') this.playLaserSound();
+    else if (name === 'powerup') this.playPowerupSound();
+    else if (name === 'hit') this.playExplosionSound(); // Fallback for 'hit'
+  }
+
   playLaserSound() {
     this.resume();
     const osc = this.ctx.createOscillator();
