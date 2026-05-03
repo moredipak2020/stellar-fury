@@ -2,6 +2,7 @@ import { Explosion } from './Explosion.js';
 import { Asteroid } from './Asteroid.js';
 import { Bullet } from './Bullet.js';
 import { AlienMinion } from './AlienMinion.js';
+import { PowerUp } from './PowerUp.js';
 
 export class Boss {
   constructor(game, type = 'rock_titan') {
