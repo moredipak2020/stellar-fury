@@ -52,7 +52,7 @@ export class Game {
     
     // New Hero Ships
     for (let i = 1; i <= 5; i++) {
-      this.assets.loadImage(`hero_${i}`, `/assets/ships/hero_${i}.png`);
+      this.assets.loadImage(`hero_${i}`, `/assets/Ships/hero_${i}.png`);
     }
     
     // New Alien Boss and Minions
