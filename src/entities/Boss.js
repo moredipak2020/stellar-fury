@@ -1,6 +1,7 @@
 import { Explosion } from './Explosion.js';
 import { Asteroid } from './Asteroid.js';
 import { Bullet } from './Bullet.js';
+import { AlienMinion } from './AlienMinion.js';
 
 export class Boss {
   constructor(game, type = 'rock_titan') {
@@ -23,8 +24,7 @@ export class Boss {
       this.phase = 1;
       this.speed = 30;
       
-      // We will draw the Rock Titan as a massive clustered asteroid for now
-      this.image = this.game.assets.images['asteroid_large1_gold_01']; 
+      this.image = this.game.assets.getImage('alien_mothership'); 
     } else if (this.type === 'boss_nebula_wraith') {
       this.width = 150;
       this.height = 150;
@@ -48,12 +48,12 @@ export class Boss {
     if (this.type === 'rock_titan') {
       if (this.hp <= this.maxHp / 2 && this.phase === 1) {
         this.phase = 2;
-        // Spawn some asteroids when changing phase
+        // Spawn alien interceptors when changing phase
         for(let i=0; i<3; i++) {
-           let ast = new Asteroid(this.game, this.x, this.y, 'medium');
-           ast.speedX = (Math.random() - 0.5) * 100;
-           ast.speedY = Math.random() * 50 + 50;
-           this.game.asteroids.push(ast);
+           let minion = new AlienMinion(this.game, this.x, this.y, 'alien_creature_2');
+           minion.speedX = (Math.random() - 0.5) * 100;
+           minion.speedY = Math.random() * 50 + 50;
+           this.game.enemies.push(minion);
         }
       }
     } else if (this.type === 'boss_nebula_wraith' && !this.isClone) {
@@ -114,34 +114,34 @@ export class Boss {
         // Attack pattern
         if (this.phase === 1) {
           if (Math.random() < 0.02) {
-            // Shoot ring
+            // Deploy drone ring
             for (let i = 0; i < 8; i++) {
               let angle = (i / 8) * Math.PI * 2;
               let vx = Math.cos(angle) * 150;
               let vy = Math.sin(angle) * 150;
-              let b = new Bullet(this.game, this.x, this.y + this.height/2, 'yellow');
-              b.speedX = vx; b.speed = -vy; // in Bullet.js y -= speed
+              let b = new AlienMinion(this.game, this.x, this.y + this.height/2, 'alien_creature_1');
+              b.speedX = vx; b.speedY = vy; // moving outwards
               this.game.enemyBullets.push(b);
             }
           }
         } else if (this.phase === 2) {
           if (Math.random() < 0.03) {
-            // Shoot targeted stream
+            // Deploy targeted drone stream
             if (this.game.player) {
               let dx = this.game.player.x - this.x;
               let dy = this.game.player.y - this.y;
               let mag = Math.sqrt(dx*dx + dy*dy);
-              let b = new Bullet(this.game, this.x, this.y + this.height/2, 'yellow');
+              let b = new AlienMinion(this.game, this.x, this.y + this.height/2, 'alien_creature_1');
               b.speedX = (dx/mag) * 250;
-              b.speed = -(dy/mag) * 250;
+              b.speedY = (dy/mag) * 250;
               this.game.enemyBullets.push(b);
             }
           }
           if (Math.random() < 0.01) {
-             // Spawn small asteroid
-             let ast = new Asteroid(this.game, this.x, this.y + this.height/2, 'small');
-             ast.speedY = 150;
-             this.game.asteroids.push(ast);
+             // Deploy interceptor
+             let minion = new AlienMinion(this.game, this.x, this.y + this.height/2, 'alien_creature_2');
+             minion.speedY = 150;
+             this.game.enemies.push(minion);
           }
         }
       } else if (this.type === 'boss_nebula_wraith') {
@@ -195,13 +195,13 @@ export class Boss {
         this.game.score += 5000;
         this.game.updateHUD();
         
-        // Split into pieces (Rock Titan)
+        // Final burst of alien bombers
         if (this.type === 'rock_titan') {
           for (let i = 0; i < 6; i++) {
-             let ast = new Asteroid(this.game, this.x, this.y, 'large');
-             ast.speedX = (Math.random() - 0.5) * 200;
-             ast.speedY = (Math.random() - 0.5) * 200;
-             this.game.asteroids.push(ast);
+             let minion = new AlienMinion(this.game, this.x, this.y, 'alien_creature_3');
+             minion.speedX = (Math.random() - 0.5) * 200;
+             minion.speedY = (Math.random() - 0.5) * 200;
+             this.game.enemies.push(minion);
           }
         }
         // Reward unlock

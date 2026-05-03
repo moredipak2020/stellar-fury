@@ -50,6 +50,12 @@ export class Game {
     this.assets.loadImage('ship3_red', '/assets/Ships/spr_ship3_red.png');
     this.assets.loadImage('ship2_purple', '/assets/Ships/spr_ship2_purple.png');
     
+    // New Alien Boss and Minions
+    this.assets.loadImage('alien_mothership', '/assets/new_aliens/alien_mothership.png');
+    this.assets.loadImage('alien_creature_1', '/assets/new_aliens/alien_creature_1.png');
+    this.assets.loadImage('alien_creature_2', '/assets/new_aliens/alien_creature_2.png');
+    this.assets.loadImage('alien_creature_3', '/assets/new_aliens/alien_creature_3.png');
+    
     this.assets.loadImage('bullet1_blue', '/assets/Projectiles/spr_bullet1_blue.png');
     this.assets.loadImage('bullet1_yellow', '/assets/Projectiles/spr_bullet1_yellow.png');
     
