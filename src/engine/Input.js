@@ -7,7 +7,8 @@ export class Input {
       right: false,
       fire: false,
       bomb: false,
-      pause: false
+      pause: false,
+      debugLevel: null
     };
 
     this.initKeyboard();
@@ -70,6 +71,19 @@ export class Input {
           this.keys.triggerLaserCycle = true;
         } else if (!isPressed) {
           this.keys.laserCycle = false;
+        }
+        e.preventDefault();
+        break;
+      case 'Digit1':
+      case 'Digit2':
+      case 'Digit3':
+      case 'Digit4':
+      case 'Digit5':
+      case 'Digit6':
+      case 'Digit7':
+      case 'Digit8':
+        if (isPressed) {
+          this.keys.debugLevel = parseInt(e.key, 10);
         }
         e.preventDefault();
         break;

@@ -287,6 +287,12 @@ export class Game {
         this.input.keys.pause = false;
         this.isPaused = !this.isPaused;
     }
+
+    if (this.input.keys.debugLevel !== null) {
+        const targetLevel = this.input.keys.debugLevel - 1;
+        this.levelManager.startLevel(targetLevel);
+        this.input.keys.debugLevel = null;
+    }
     
     if (this.isPaused) return;
 
