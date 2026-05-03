@@ -29,22 +29,17 @@ export class PowerUp {
     // Background glow
     ctx.beginPath();
     ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
-    if (this.type === 'weapon') ctx.fillStyle = 'orange';
-    if (this.type === 'shield') ctx.fillStyle = 'cyan';
-    if (this.type === 'health') ctx.fillStyle = 'red';
-    ctx.fill();
-    
-    ctx.strokeStyle = 'white';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
     // Emoji icon
     ctx.font = '16px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    if (this.type === 'weapon') ctx.fillText('🔫', 0, 0);
-    if (this.type === 'shield') ctx.fillText('🛡️', 0, 0);
-    if (this.type === 'health') ctx.fillText('❤️', 0, 0);
+    if (this.type === 'weapon') { ctx.fillStyle = 'orange'; ctx.fill(); ctx.stroke(); ctx.fillText('🔫', 0, 0); }
+    else if (this.type === 'shield') { ctx.fillStyle = 'cyan'; ctx.fill(); ctx.stroke(); ctx.fillText('🛡️', 0, 0); }
+    else if (this.type === 'health') { ctx.fillStyle = 'red'; ctx.fill(); ctx.stroke(); ctx.fillText('❤️', 0, 0); }
+    else if (this.type === 'speed') { ctx.fillStyle = 'yellow'; ctx.fill(); ctx.stroke(); ctx.fillText('⚡', 0, 0); }
+    else if (this.type === 'bomb') { ctx.fillStyle = 'white'; ctx.fill(); ctx.stroke(); ctx.fillText('💣', 0, 0); }
+    else if (this.type === 'score') { ctx.fillStyle = 'gold'; ctx.fill(); ctx.stroke(); ctx.fillText('⭐', 0, 0); }
+    else if (this.type === 'magnet') { ctx.fillStyle = 'purple'; ctx.fill(); ctx.stroke(); ctx.fillText('🧲', 0, 0); }
     
     ctx.restore();
   }

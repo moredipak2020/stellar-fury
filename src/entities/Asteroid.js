@@ -83,7 +83,19 @@ export class Asteroid {
     
     // Update score
     if (this.game.score !== undefined) {
-      this.game.score += this.score;
+      let multiplier = this.game.scoreMultiplier || 1;
+      
+      // Combo logic
+      if (this.game.comboTimer > 0) {
+          this.game.comboCount++;
+      } else {
+          this.game.comboCount = 1;
+      }
+      this.game.comboTimer = 1000;
+      
+      let comboMult = Math.pow(1.5, this.game.comboCount - 1);
+      
+      this.game.score += Math.floor(this.score * multiplier * comboMult);
       this.game.updateHUD();
     }
   }

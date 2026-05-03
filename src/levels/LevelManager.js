@@ -1,6 +1,7 @@
 import { LevelData } from './LevelData.js';
 import { Enemy } from '../entities/Enemy.js';
 import { Asteroid } from '../entities/Asteroid.js';
+import { Boss } from '../entities/Boss.js';
 
 export class LevelManager {
   constructor(game) {
@@ -37,6 +38,9 @@ export class LevelManager {
     // Reset player HP each level
     if (this.game.player) {
       this.game.player.hp = this.game.player.maxHp || 100;
+      this.game.player.state = 'entering';
+      this.game.player.x = this.game.canvas.width / 2;
+      this.game.player.y = this.game.canvas.height + 100;
       this.game.updateHUD();
     }
     
@@ -49,6 +53,9 @@ export class LevelManager {
 
   update(deltaTime) {
     if (this.state === 'transition') {
+      if (this.game.player && this.game.player.y > -100) {
+        this.game.player.y -= 800 * (deltaTime / 1000);
+      }
       this.continueTimer -= deltaTime;
       const sec = Math.ceil(this.continueTimer / 1000);
       const countdownEl = document.getElementById('next-level-countdown');
@@ -94,7 +101,7 @@ export class LevelManager {
       }
 
       // Check level complete
-      if (this.waveQueue.length === 0 && this.activeSpawns.length === 0 && this.game.enemies.length === 0) {
+      if (this.waveQueue.length === 0 && this.activeSpawns.length === 0 && this.game.enemies.length === 0 && this.game.bosses.length === 0) {
         this.completeLevel();
       }
     }
@@ -102,7 +109,10 @@ export class LevelManager {
 
   spawnEntity(type) {
     const x = Math.random() * (this.game.canvas.width - 100) + 50;
-    if (type.startsWith('asteroid')) {
+    if (type.startsWith('boss_')) {
+      const bossType = type.replace('boss_', '');
+      this.game.bosses.push(new Boss(this.game, bossType));
+    } else if (type.startsWith('asteroid')) {
       const size = type.split('_')[1] || 'large';
       this.game.asteroids.push(new Asteroid(this.game, x, -50, size));
     } else {

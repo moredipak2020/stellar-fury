@@ -17,10 +17,19 @@ export class Player {
     this.maxWeaponTier = 7;
     this.lives = 3;
     this.invincibleTimer = 0;
+    this.state = 'entering';
+    this.y = game.canvas.height + 100;
     
     this.bullets = [];
     this.fireTimer = 0;
     this.fireRate = 1000 / 4; // 4 shots per sec
+
+    this.speedBoostTimer = 0;
+    this.magnetTimer = 0;
+    this.scoreMultTimer = 0;
+    this.bombs = 1;
+    this.maxBombs = 5;
+    this.bombCooldown = 0;
 
     this.thrusterFrames = [];
     for(let i=0; i<=15; i++) {
@@ -101,6 +110,15 @@ export class Player {
       this.weaponTier = Math.min(this.maxWeaponTier, this.weaponTier + 1);
       // Increase fire rate or change bullet pattern based on tier
       this.fireRate = Math.max(1000 / 15, 1000 / (4 + this.weaponTier));
+    } else if (type === 'speed') {
+      this.speedBoostTimer = 10000;
+    } else if (type === 'bomb') {
+      this.bombs = Math.min(this.maxBombs, this.bombs + 1);
+    } else if (type === 'score') {
+      this.scoreMultTimer = 15000;
+      this.game.scoreMultiplier = 2;
+    } else if (type === 'magnet') {
+      this.magnetTimer = 12000;
     }
     this.updateHUD();
   }
@@ -120,15 +138,50 @@ export class Player {
   }
 
   update(deltaTime) {
+    if (this.state === 'entering') {
+       this.y -= 400 * (deltaTime / 1000);
+       if (this.y <= this.game.canvas.height - 100) {
+           this.y = this.game.canvas.height - 100;
+           this.state = 'playing';
+       }
+       // Animation for thrusters
+       this.thrusterTimer += deltaTime;
+       if (this.thrusterTimer > this.thrusterInterval) {
+         this.thrusterFrameIndex = (this.thrusterFrameIndex + 1) % this.thrusterFrames.length;
+         this.thrusterTimer = 0;
+       }
+       return;
+    }
+
     if (this.invincibleTimer > 0) {
       this.invincibleTimer -= deltaTime;
     }
 
+    // Powerup Timers
+    if (this.speedBoostTimer > 0) this.speedBoostTimer -= deltaTime;
+    if (this.scoreMultTimer > 0) {
+      this.scoreMultTimer -= deltaTime;
+      if (this.scoreMultTimer <= 0) this.game.scoreMultiplier = 1;
+    }
+    if (this.magnetTimer > 0) {
+      this.magnetTimer -= deltaTime;
+      this.game.powerups.forEach(p => {
+         let dx = this.x - p.x;
+         let dy = this.y - p.y;
+         let dist = Math.sqrt(dx*dx + dy*dy);
+         if (dist < 300) {
+            p.x += (dx / dist) * 400 * (deltaTime/1000);
+            p.y += (dy / dist) * 400 * (deltaTime/1000);
+         }
+      });
+    }
+
     // Movement
-    if (this.game.input.keys.up) this.y -= this.speed * (deltaTime / 1000);
-    if (this.game.input.keys.down) this.y += this.speed * (deltaTime / 1000);
-    if (this.game.input.keys.left) this.x -= this.speed * (deltaTime / 1000);
-    if (this.game.input.keys.right) this.x += this.speed * (deltaTime / 1000);
+    let currentSpeed = this.speedBoostTimer > 0 ? this.speed * 1.5 : this.speed;
+    if (this.game.input.keys.up) this.y -= currentSpeed * (deltaTime / 1000);
+    if (this.game.input.keys.down) this.y += currentSpeed * (deltaTime / 1000);
+    if (this.game.input.keys.left) this.x -= currentSpeed * (deltaTime / 1000);
+    if (this.game.input.keys.right) this.x += currentSpeed * (deltaTime / 1000);
 
     const minHeight = this.game.canvas.height * 0.4;
     if (this.y < minHeight) this.y = minHeight;
@@ -153,6 +206,38 @@ export class Player {
           this.muzzleIndex = 0;
         }
       }
+    }
+    // Bomb
+    if (this.bombCooldown > 0) this.bombCooldown -= deltaTime;
+    if (this.game.input.keys.bomb && this.bombs > 0 && this.bombCooldown <= 0) {
+       this.bombs--;
+       this.bombCooldown = 1000;
+       if (this.game.audio) this.game.audio.playSound('explosion');
+       // Wipe small/medium enemies and bullets
+       this.game.enemies.forEach(e => {
+           if (e.hp <= 10) e.takeDamage(10); // deal 10 dmg to everything
+       });
+       this.game.enemyBullets = [];
+       // Add huge explosion effect over the screen
+       for (let i = 0; i < 10; i++) {
+           let ex = this.game.canvas.width * Math.random();
+           let ey = this.game.canvas.height * Math.random();
+           // import { Explosion } from './Explosion.js' should be done if we create Explosion
+           // Since Explosion is not imported in Player.js, we just let Game.js handle it by pushing to an array if needed,
+           // or we can just import it. Let's just do screen flash.
+       }
+       // Screen flash
+       const flash = document.createElement('div');
+       flash.style.position = 'absolute';
+       flash.style.top = '0'; flash.style.left = '0';
+       flash.style.width = '100%'; flash.style.height = '100%';
+       flash.style.backgroundColor = 'white';
+       flash.style.zIndex = '9999';
+       flash.style.pointerEvents = 'none';
+       flash.style.animation = 'fadeOut 1s ease-out forwards';
+       document.body.appendChild(flash);
+       setTimeout(() => document.body.removeChild(flash), 1000);
+       this.updateHUD();
     }
 
     // Shooting
@@ -194,7 +279,7 @@ export class Player {
     this.bullets.forEach(b => b.draw(ctx));
 
     // Draw thruster
-    const isMoving = this.game.input.keys.up || this.game.input.keys.left || this.game.input.keys.right || this.game.input.keys.down;
+    const isMoving = this.state === 'entering' || this.game.input.keys.up || this.game.input.keys.left || this.game.input.keys.right || this.game.input.keys.down;
     if (isMoving) {
       const thrusterName = this.thrusterFrames[this.thrusterFrameIndex];
       const thrusterImg = assets.getImage(thrusterName);

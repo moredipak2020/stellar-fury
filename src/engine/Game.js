@@ -24,8 +24,13 @@ export class Game {
     this.enemies = [];
     this.enemyBullets = [];
     this.powerups = [];
+    this.bosses = [];
+    this.lightningZones = [];
     
     this.score = 0;
+    this.scoreMultiplier = 1;
+    this.comboCount = 0;
+    this.comboTimer = 0;
     this.levelManager = new LevelManager(this);
     
     this.resizeCanvas();
@@ -41,6 +46,9 @@ export class Game {
     this.assets.loadImage('ship1_gold', '/assets/Ships/spr_ship1_gold.png');
     this.assets.loadImage('ship1_red', '/assets/Ships/spr_ship1_red.png');
     this.assets.loadImage('ship1_purple', '/assets/Ships/spr_ship1_purple.png');
+    this.assets.loadImage('ship2_red', '/assets/Ships/spr_ship2_red.png');
+    this.assets.loadImage('ship3_red', '/assets/Ships/spr_ship3_red.png');
+    this.assets.loadImage('ship2_purple', '/assets/Ships/spr_ship2_purple.png');
     
     this.assets.loadImage('bullet1_blue', '/assets/Projectiles/spr_bullet1_blue.png');
     this.assets.loadImage('bullet1_yellow', '/assets/Projectiles/spr_bullet1_yellow.png');
@@ -171,6 +179,20 @@ export class Game {
           break;
         }
       }
+
+      if (!bullet.active) continue;
+
+      // Hit Bosses
+      for (let boss of this.bosses) {
+        if (!boss.active) continue;
+        
+        if (bullet.x > boss.x - boss.width/2 && bullet.x < boss.x + boss.width/2 &&
+            bullet.y > boss.y - boss.height/2 && bullet.y < boss.y + boss.height/2) {
+          bullet.active = false;
+          boss.takeDamage(1);
+          break;
+        }
+      }
     }
 
     // Player vs Powerups
@@ -224,6 +246,17 @@ export class Game {
         }
       }
     }
+
+    // Player vs Bosses
+    for (let boss of this.bosses) {
+      if (!boss.active) continue;
+      if (this.player.x > boss.x - boss.width/2 && this.player.x < boss.x + boss.width/2 &&
+          this.player.y > boss.y - boss.height/2 && this.player.y < boss.y + boss.height/2) {
+        if (this.player.invincibleTimer <= 0) {
+          this.player.takeDamage(30);
+        }
+      }
+    }
   }
 
   update(deltaTime) {
@@ -231,6 +264,46 @@ export class Game {
     if (this.player) this.player.update(deltaTime);
     
     if (this.levelManager) this.levelManager.update(deltaTime);
+
+    if (this.comboTimer > 0) {
+        this.comboTimer -= deltaTime;
+        if (this.comboTimer <= 0) {
+            this.comboCount = 0;
+        }
+    }
+
+    // Lightning Hazards
+    if (this.levelManager && this.levelManager.levelData && this.levelManager.levelData.lightning) {
+       if (Math.random() < 0.005) {
+           this.lightningZones.push({
+               x: Math.random() * this.canvas.width,
+               y: Math.random() * this.canvas.height,
+               radius: 100 + Math.random() * 100,
+               timer: 2000,
+               active: false
+           });
+       }
+    }
+
+    for (let i = this.lightningZones.length - 1; i >= 0; i--) {
+        let z = this.lightningZones[i];
+        z.timer -= deltaTime;
+        if (z.timer <= 0 && !z.active) {
+            z.active = true;
+            z.timer = 500;
+            this.audio.playSound('explosion'); // Play sound when strike hits
+        } else if (z.timer <= 0 && z.active) {
+            this.lightningZones.splice(i, 1);
+        } else if (z.active && this.player) {
+            let dx = this.player.x - z.x;
+            let dy = this.player.y - z.y;
+            if (Math.sqrt(dx*dx + dy*dy) < z.radius) {
+                if (this.player.invincibleTimer <= 0) {
+                    this.player.takeDamage(10);
+                }
+            }
+        }
+    }
 
     this.asteroids.forEach(a => a.update(deltaTime));
     this.asteroids = this.asteroids.filter(a => a.active);
@@ -240,6 +313,9 @@ export class Game {
 
     this.enemyBullets.forEach(b => b.update(deltaTime));
     this.enemyBullets = this.enemyBullets.filter(b => b.active);
+
+    this.bosses.forEach(b => b.update(deltaTime));
+    this.bosses = this.bosses.filter(b => b.active);
 
     this.explosions.forEach(e => e.update(deltaTime));
     this.explosions = this.explosions.filter(e => e.active);
@@ -260,12 +336,68 @@ export class Game {
     
     this.asteroids.forEach(a => a.draw(this.ctx));
     this.enemies.forEach(e => e.draw(this.ctx));
+    this.bosses.forEach(b => b.draw(this.ctx));
     this.enemyBullets.forEach(b => b.draw(this.ctx));
     this.powerups.forEach(p => p.draw(this.ctx));
     
     if (this.player) this.player.draw(this.ctx);
     
     this.explosions.forEach(e => e.draw(this.ctx));
+
+    // Draw Lightning Hazards
+    this.lightningZones.forEach(z => {
+        if (!z.active) {
+            this.ctx.fillStyle = `rgba(255, 0, 0, ${0.1 + Math.sin(z.timer/50)*0.1})`;
+            this.ctx.beginPath();
+            this.ctx.arc(z.x, z.y, z.radius, 0, Math.PI * 2);
+            this.ctx.fill();
+            
+            // Telegraph border
+            this.ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
+            this.ctx.lineWidth = 2;
+            this.ctx.stroke();
+        } else {
+            this.ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.8 + 0.2})`;
+            this.ctx.beginPath();
+            this.ctx.arc(z.x, z.y, z.radius, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+    });
+
+    // Draw Fog if active
+    if (this.levelManager && this.levelManager.levelData && this.levelManager.levelData.fog) {
+      this.drawFog(this.ctx);
+    }
+    
+    // Draw Combo
+    if (this.comboCount > 1) {
+        this.ctx.font = 'bold 36px "Outfit", sans-serif';
+        this.ctx.fillStyle = `rgba(255, 215, 0, ${this.comboTimer/1000})`;
+        this.ctx.textAlign = 'right';
+        this.ctx.fillText(`${this.comboCount}x COMBO!`, this.canvas.width - 30, 150);
+    }
+  }
+
+  drawFog(ctx) {
+    if (!this.player) return;
+    const cx = this.player.x;
+    const cy = this.player.y;
+    const r = 250;
+    
+    const grad = ctx.createRadialGradient(cx, cy, r * 0.4, cx, cy, r);
+    grad.addColorStop(0, 'rgba(20, 10, 30, 0)');
+    grad.addColorStop(1, 'rgba(20, 10, 30, 0.95)');
+    
+    ctx.fillStyle = 'rgba(20, 10, 30, 0.95)';
+    ctx.beginPath();
+    ctx.rect(0, 0, this.canvas.width, this.canvas.height);
+    ctx.arc(cx, cy, r, 0, Math.PI * 2, true);
+    ctx.fill();
+    
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fill();
   }
 }
 

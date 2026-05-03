@@ -1,6 +1,6 @@
 function buildWaves(levelConfig) {
   const waves = [];
-  const { duration, baseEnemyInterval, baseAsteroidInterval, asteroidSizes, hasDrones } = levelConfig;
+  const { duration, baseEnemyInterval, baseAsteroidInterval, asteroidSizes, hasDrones, hasFighters, hasBombers, fog } = levelConfig;
   
   // Galaxies (Nebulas and large clusters)
   for (let t = 5000; t < duration; t += 45000) {
@@ -42,7 +42,10 @@ function buildWaves(levelConfig) {
       currentTime += baseAsteroidInterval + Math.random() * 3000;
     } else {
       let eType = 'scout';
-      if (hasDrones && Math.random() > 0.6) eType = 'drone';
+      const rand = Math.random();
+      if (hasBombers && rand > 0.85) eType = 'bomber';
+      else if (hasFighters && rand > 0.6) eType = 'fighter';
+      else if (hasDrones && rand > 0.3) eType = 'drone';
       
       const count = Math.floor(Math.random() * 4) + 2;
       waves.push({ type: 'spawn', enemy: eType, count, interval: 800, time: currentTime });
@@ -99,5 +102,104 @@ export const LevelData = [
       asteroidSizes: ['medium', 'large'],
       hasDrones: true
     })
+  },
+  {
+    id: 4,
+    title: "Rock Titan",
+    subtitle: "Boss Encounter",
+    parTime: 420000, // 7 minutes
+    bg: null,
+    stars: 'bg_stars_red',
+    waves: (() => {
+      let w = buildWaves({
+        duration: 380000,
+        baseEnemyInterval: 5000,
+        baseAsteroidInterval: 8000,
+        asteroidSizes: ['medium', 'large'],
+        hasDrones: true,
+        hasFighters: true
+      });
+      w.push({ type: 'announce', text: 'WARNING: ROCK TITAN INCOMING', time: 385000 });
+      w.push({ type: 'spawn', enemy: 'boss_rock_titan', count: 1, interval: 1000, time: 390000 });
+      w.sort((a, b) => a.time - b.time);
+      return w;
+    })()
+  },
+  {
+    id: 5,
+    title: "Into the Fog",
+    subtitle: "Nebula Expanse",
+    parTime: 360000,
+    bg: 'bg_nebula1',
+    stars: 'bg_stars_blue',
+    fog: true,
+    waves: buildWaves({
+      duration: 360000,
+      baseEnemyInterval: 5000,
+      baseAsteroidInterval: 7000,
+      asteroidSizes: ['small', 'medium'],
+      hasDrones: true,
+      hasFighters: true
+    })
+  },
+  {
+    id: 6,
+    title: "Bomber's Reach",
+    subtitle: "Nebula Expanse",
+    parTime: 420000,
+    bg: 'bg_nebula1',
+    stars: 'bg_stars_blue',
+    fog: true,
+    waves: buildWaves({
+      duration: 420000,
+      baseEnemyInterval: 4500,
+      baseAsteroidInterval: 8000,
+      asteroidSizes: ['medium'],
+      hasDrones: true,
+      hasFighters: true,
+      hasBombers: true
+    })
+  },
+  {
+    id: 7,
+    title: "Nebula Storm",
+    subtitle: "Nebula Expanse",
+    parTime: 420000,
+    bg: 'bg_nebula2',
+    stars: 'bg_stars_blue',
+    fog: true,
+    lightning: true, // Environmental hazard
+    waves: buildWaves({
+      duration: 420000,
+      baseEnemyInterval: 4000,
+      baseAsteroidInterval: 7000,
+      asteroidSizes: ['medium', 'large'],
+      hasDrones: true,
+      hasFighters: true,
+      hasBombers: true
+    })
+  },
+  {
+    id: 8,
+    title: "Nebula Wraith",
+    subtitle: "Boss Encounter",
+    parTime: 480000,
+    bg: 'bg_nebula2',
+    stars: 'bg_stars_blue',
+    fog: true,
+    waves: (() => {
+      let w = buildWaves({
+        duration: 400000,
+        baseEnemyInterval: 4000,
+        baseAsteroidInterval: 9000,
+        asteroidSizes: ['small'],
+        hasDrones: true,
+        hasFighters: true
+      });
+      w.push({ type: 'announce', text: 'WARNING: NEBULA WRAITH DETECTED', time: 405000 });
+      w.push({ type: 'spawn', enemy: 'boss_nebula_wraith', count: 1, interval: 1000, time: 410000 });
+      w.sort((a, b) => a.time - b.time);
+      return w;
+    })()
   }
 ];
