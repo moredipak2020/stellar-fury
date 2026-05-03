@@ -54,6 +54,24 @@ export class Input {
         }
         e.preventDefault();
         break;
+      case 'KeyS':
+        if (isPressed && !this.keys.shipCycle) {
+          this.keys.shipCycle = true;
+          this.keys.triggerShipCycle = true;
+        } else if (!isPressed) {
+          this.keys.shipCycle = false;
+        }
+        e.preventDefault();
+        break;
+      case 'KeyL':
+        if (isPressed && !this.keys.laserCycle) {
+          this.keys.laserCycle = true;
+          this.keys.triggerLaserCycle = true;
+        } else if (!isPressed) {
+          this.keys.laserCycle = false;
+        }
+        e.preventDefault();
+        break;
     }
   }
 

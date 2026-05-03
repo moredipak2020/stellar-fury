@@ -50,6 +50,11 @@ export class Game {
     this.assets.loadImage('ship3_red', '/assets/Ships/spr_ship3_red.png');
     this.assets.loadImage('ship2_purple', '/assets/Ships/spr_ship2_purple.png');
     
+    // New Hero Ships
+    for (let i = 1; i <= 5; i++) {
+      this.assets.loadImage(`hero_${i}`, `/assets/ships/hero_${i}.png`);
+    }
+    
     // New Alien Boss and Minions
     this.assets.loadImage('alien_mothership', '/assets/new_aliens/alien_mothership.png');
     this.assets.loadImage('alien_creature_1', '/assets/new_aliens/alien_creature_1.png');
@@ -58,6 +63,16 @@ export class Game {
     
     this.assets.loadImage('bullet1_blue', '/assets/Projectiles/spr_bullet1_blue.png');
     this.assets.loadImage('bullet1_yellow', '/assets/Projectiles/spr_bullet1_yellow.png');
+    
+    // Animated Lasers
+    const laserColors = ['blue', 'green', 'yellow'];
+    for (let c of laserColors) {
+      const capColor = c.charAt(0).toUpperCase() + c.slice(1);
+      for (let i = 0; i < 12; i++) {
+        const f = i.toString().padStart(2, '0');
+        this.assets.loadImage(`laser_${c}_${f}`, `/assets/Lasers/Laser ${capColor}/spr_${c}_laser_${f}.png`);
+      }
+    }
     
     this.assets.loadImage('bg_standard', '/assets/Backgrounds/spr_sky_standard.png');
     this.assets.loadImage('bg_nebula1', '/assets/Backgrounds/spr_sky_nebula1.png');

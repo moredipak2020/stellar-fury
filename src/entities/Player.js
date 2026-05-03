@@ -23,6 +23,12 @@ export class Player {
     this.bullets = [];
     this.fireTimer = 0;
     this.fireRate = 1000 / 4; // 4 shots per sec
+    
+    // Customization options
+    this.ships = ['ship1_gold', 'hero_1', 'hero_2', 'hero_3', 'hero_4', 'hero_5'];
+    this.currentShipIndex = 0;
+    this.lasers = ['blue', 'green', 'yellow'];
+    this.currentLaserIndex = 0;
 
     this.speedBoostTimer = 0;
     this.magnetTimer = 0;
@@ -163,6 +169,16 @@ export class Player {
       this.scoreMultTimer -= deltaTime;
       if (this.scoreMultTimer <= 0) this.game.scoreMultiplier = 1;
     }
+    
+    // Customization cycling
+    if (this.game.input.keys.triggerShipCycle) {
+      this.game.input.keys.triggerShipCycle = false;
+      this.currentShipIndex = (this.currentShipIndex + 1) % this.ships.length;
+    }
+    if (this.game.input.keys.triggerLaserCycle) {
+      this.game.input.keys.triggerLaserCycle = false;
+      this.currentLaserIndex = (this.currentLaserIndex + 1) % this.lasers.length;
+    }
     if (this.magnetTimer > 0) {
       this.magnetTimer -= deltaTime;
       this.game.powerups.forEach(p => {
@@ -246,17 +262,19 @@ export class Player {
       this.fireTimer = 0;
       
       const fireY = this.y - this.height/2;
+      const laserColor = this.lasers[this.currentLaserIndex];
+      
       if (this.weaponTier === 1) {
-        this.bullets.push(new Bullet(this.game, this.x, fireY, 'blue'));
+        this.bullets.push(new Bullet(this.game, this.x, fireY, laserColor));
       } else if (this.weaponTier === 2) {
-        this.bullets.push(new Bullet(this.game, this.x - 10, fireY, 'blue'));
-        this.bullets.push(new Bullet(this.game, this.x + 10, fireY, 'blue'));
+        this.bullets.push(new Bullet(this.game, this.x - 10, fireY, laserColor));
+        this.bullets.push(new Bullet(this.game, this.x + 10, fireY, laserColor));
       } else if (this.weaponTier >= 3) {
-        this.bullets.push(new Bullet(this.game, this.x, fireY, 'blue'));
-        const b1 = new Bullet(this.game, this.x - 15, fireY, 'blue');
+        this.bullets.push(new Bullet(this.game, this.x, fireY, laserColor));
+        const b1 = new Bullet(this.game, this.x - 15, fireY, laserColor);
         b1.speedX = -100;
         this.bullets.push(b1);
-        const b2 = new Bullet(this.game, this.x + 15, fireY, 'blue');
+        const b2 = new Bullet(this.game, this.x + 15, fireY, laserColor);
         b2.speedX = 100;
         this.bullets.push(b2);
       }
@@ -304,8 +322,10 @@ export class Player {
     }
 
     // Draw ship
-    const shipImg = assets.getImage('ship1_gold');
+    const shipName = this.ships[this.currentShipIndex];
+    const shipImg = assets.getImage(shipName);
     if (shipImg) {
+      // For the generated hero ships, they might be tightly cropped and larger. The logic works fine using this.width.
       ctx.drawImage(shipImg, this.x - this.width/2, this.y - this.height/2, this.width, this.height);
     }
   }
