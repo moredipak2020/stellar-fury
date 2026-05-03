@@ -174,14 +174,23 @@ export class Boss {
                this.teleportTimer = 3000;
                // Shoot peek-a-boo
                if (this.game.player) {
+                   let targetX = this.game.player.x;
+                   let targetY = this.game.player.y;
+                   
+                   // Predictive Aiming: lead the target slightly based on movement keys
+                   if (this.game.input.keys.left) targetX -= 60;
+                   if (this.game.input.keys.right) targetX += 60;
+                   if (this.game.input.keys.up) targetY -= 60;
+                   if (this.game.input.keys.down) targetY += 60;
+                   
                    for (let i=-1; i<=1; i++) {
-                       let dx = this.game.player.x - this.x;
-                       let dy = this.game.player.y - this.y;
+                       let dx = targetX - this.x;
+                       let dy = targetY - this.y;
                        let mag = Math.sqrt(dx*dx + dy*dy);
                        let rad = Math.atan2(dy, dx) + i * 0.2;
                        let b = new Bullet(this.game, this.x, this.y + this.height/2, 'blue');
-                       b.speedX = Math.cos(rad) * 300;
-                       b.speed = -Math.sin(rad) * 300;
+                       b.speedX = Math.cos(rad) * 350;
+                       b.speed = -Math.sin(rad) * 350;
                        this.game.enemyBullets.push(b);
                    }
                }
@@ -192,11 +201,15 @@ export class Boss {
            this.shootTimer -= deltaTime;
            if (this.shootTimer <= 0) {
                this.shootTimer = this.phase === 3 ? 1000 : 1500;
-               // Laser grid
+               // Laser grid with sweeping motion
                for (let i = 0; i < 5; i++) {
                    let b = new Bullet(this.game, this.x - 100 + i * 50, this.y + this.height/2, 'yellow');
-                   b.speedX = 0;
-                   b.speed = -200;
+                   // Calculate sweep angle based on state timer to make them oscillate
+                   let sweepSpeed = Math.sin(this.stateTimer / 400) * 200;
+                   if (this.isClone) sweepSpeed *= -1; // Clones sweep in opposite direction
+                   
+                   b.speedX = sweepSpeed;
+                   b.speed = -250;
                    this.game.enemyBullets.push(b);
                }
            }
@@ -257,6 +270,24 @@ export class Boss {
          }
       }
       ctx.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
+      
+      if (this.type === 'boss_nebula_wraith') {
+         // Plasma engine core pulse (alive effect)
+         const pulse = (Math.sin(this.stateTimer / 150) + 1) / 2; // Oscillates between 0 and 1
+         ctx.globalCompositeOperation = 'lighter';
+         
+         const grad = ctx.createRadialGradient(0, 0, 5, 0, 0, 35);
+         grad.addColorStop(0, `rgba(0, 255, 255, ${0.6 + 0.4 * pulse})`);
+         grad.addColorStop(0.5, `rgba(0, 200, 255, ${0.4 * pulse})`);
+         grad.addColorStop(1, 'rgba(0, 255, 255, 0)');
+         
+         ctx.fillStyle = grad;
+         ctx.beginPath();
+         ctx.arc(0, 0, 35, 0, Math.PI * 2);
+         ctx.fill();
+         ctx.globalCompositeOperation = 'source-over';
+      }
+      
       ctx.globalAlpha = 1.0;
       ctx.restore();
     } else {

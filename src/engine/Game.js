@@ -12,6 +12,7 @@ export class Game {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     this.isRunning = false;
+    this.isPaused = false;
     this.lastTime = 0;
     this.input = new Input();
     this.assets = new AssetLoader();
@@ -282,6 +283,13 @@ export class Game {
   }
 
   update(deltaTime) {
+    if (this.input.keys.pause) {
+        this.input.keys.pause = false;
+        this.isPaused = !this.isPaused;
+    }
+    
+    if (this.isPaused) return;
+
     if (this.background) this.background.update(deltaTime);
     if (this.player) this.player.update(deltaTime);
     
@@ -397,6 +405,15 @@ export class Game {
         this.ctx.fillStyle = `rgba(255, 215, 0, ${this.comboTimer/1000})`;
         this.ctx.textAlign = 'right';
         this.ctx.fillText(`${this.comboCount}x COMBO!`, this.canvas.width - 30, 150);
+    }
+    
+    if (this.isPaused) {
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.font = 'bold 64px "Outfit", sans-serif';
+        this.ctx.fillStyle = '#E8A45C';
+        this.ctx.textAlign = 'center';
+        this.ctx.fillText('PAUSED', this.canvas.width / 2, this.canvas.height / 2);
     }
   }
 

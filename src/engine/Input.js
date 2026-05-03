@@ -49,6 +49,7 @@ export class Input {
         break;
       case 'KeyP':
       case 'Escape':
+      case 'Space':
         if (isPressed) {
           this.keys.pause = true; // We'll handle resetting this in Game.js
         }

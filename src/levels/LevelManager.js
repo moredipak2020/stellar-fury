@@ -137,6 +137,40 @@ export class LevelManager {
     this.state = 'transition';
     this.continueTimer = 5000;
     
+    // Intercept Level 8 completion
+    if (this.currentLevelIndex === 7) {
+        this.continueTimer = 9999999; // Prevent auto-continue
+        const l8Panel = document.getElementById('level-8-complete');
+        if (l8Panel) {
+            l8Panel.classList.remove('hidden');
+            
+            const btnContinue = document.getElementById('btn-continue-l1');
+            if (btnContinue) {
+                btnContinue.onclick = () => {
+                    l8Panel.classList.add('hidden');
+                    this.startLevel(0);
+                };
+            }
+            
+            const btnExit = document.getElementById('btn-exit');
+            if (btnExit) {
+                btnExit.onclick = () => {
+                    l8Panel.classList.add('hidden');
+                    this.game.stop();
+                    const go = document.getElementById('game-over');
+                    if (go) {
+                       const title = go.querySelector('.game-over-title');
+                       const sub = go.querySelector('.game-over-subtitle');
+                       if (title) title.innerText = 'THANKS FOR PLAYING';
+                       if (sub) sub.innerText = 'See you in the next sector!';
+                       go.classList.remove('hidden');
+                    }
+                };
+            }
+        }
+        return;
+    }
+    
     // Calculate stars
     let stars = 1;
     if (this.stats.deaths === 0) {
