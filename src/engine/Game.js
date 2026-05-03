@@ -424,40 +424,59 @@ export class Game {
   }
 
   drawFog(ctx) {
+    if (!this.fogCanvas) {
+      this.fogCanvas = document.createElement('canvas');
+      this.fogCanvas.width = this.canvas.width;
+      this.fogCanvas.height = this.canvas.height;
+      this.fogCtx = this.fogCanvas.getContext('2d');
+    }
+
+    // Ensure dimensions match
+    if (this.fogCanvas.width !== this.canvas.width || this.fogCanvas.height !== this.canvas.height) {
+      this.fogCanvas.width = this.canvas.width;
+      this.fogCanvas.height = this.canvas.height;
+    }
+
+    // Clear the fog canvas
+    this.fogCtx.clearRect(0, 0, this.fogCanvas.width, this.fogCanvas.height);
+
     // Fill the screen with the dark nebula fog color
-    ctx.fillStyle = 'rgba(20, 10, 30, 0.92)';
-    ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    this.fogCtx.fillStyle = 'rgba(20, 10, 30, 0.92)';
+    this.fogCtx.fillRect(0, 0, this.fogCanvas.width, this.fogCanvas.height);
     
     // Switch to destination-out to "erase" the fog using radial gradients
-    ctx.globalCompositeOperation = 'destination-out';
+    this.fogCtx.globalCompositeOperation = 'destination-out';
     
     // Player light source (significantly increased radius to 450)
     if (this.player) {
-      const grad = ctx.createRadialGradient(this.player.x, this.player.y, 100, this.player.x, this.player.y, 450);
+      const grad = this.fogCtx.createRadialGradient(this.player.x, this.player.y, 100, this.player.x, this.player.y, 450);
       grad.addColorStop(0, 'rgba(0, 0, 0, 1)');
       grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(this.player.x, this.player.y, 450, 0, Math.PI * 2);
-      ctx.fill();
+      this.fogCtx.fillStyle = grad;
+      this.fogCtx.beginPath();
+      this.fogCtx.arc(this.player.x, this.player.y, 450, 0, Math.PI * 2);
+      this.fogCtx.fill();
     }
     
     // Boss light source (Massive aura that illuminates the top of the screen)
     if (this.bosses && this.bosses.length > 0) {
       for (let boss of this.bosses) {
         if (!boss.active) continue;
-        const grad = ctx.createRadialGradient(boss.x, boss.y, 150, boss.x, boss.y, 700);
+        const grad = this.fogCtx.createRadialGradient(boss.x, boss.y, 150, boss.x, boss.y, 700);
         grad.addColorStop(0, 'rgba(0, 0, 0, 0.95)');
         grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(boss.x, boss.y, 700, 0, Math.PI * 2);
-        ctx.fill();
+        this.fogCtx.fillStyle = grad;
+        this.fogCtx.beginPath();
+        this.fogCtx.arc(boss.x, boss.y, 700, 0, Math.PI * 2);
+        this.fogCtx.fill();
       }
     }
     
     // Reset composite operation
-    ctx.globalCompositeOperation = 'source-over';
+    this.fogCtx.globalCompositeOperation = 'source-over';
+
+    // Draw the off-screen fog canvas onto the main canvas
+    ctx.drawImage(this.fogCanvas, 0, 0);
   }
 }
 
