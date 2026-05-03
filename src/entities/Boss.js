@@ -25,7 +25,7 @@ export class Boss {
       this.speed = 30;
       
       this.image = this.game.assets.getImage('alien_mothership'); 
-    } else if (this.type === 'boss_nebula_wraith') {
+    } else if (this.type === 'nebula_wraith') {
       this.width = 150;
       this.height = 150;
       this.maxHp = 800;
@@ -63,14 +63,14 @@ export class Boss {
            this.game.enemies.push(minion);
         }
       }
-    } else if (this.type === 'boss_nebula_wraith' && !this.isClone) {
+    } else if (this.type === 'nebula_wraith' && !this.isClone) {
       if (this.hp <= 500 && this.phase === 1) {
         this.phase = 2;
         this.alpha = 1.0; // Stay visible
       } else if (this.hp <= 200 && this.phase === 2) {
         this.phase = 3;
         // Clone split
-        let clone = new Boss(this.game, 'boss_nebula_wraith');
+        let clone = new Boss(this.game, 'nebula_wraith');
         clone.isClone = true;
         clone.mainBoss = this;
         clone.x = this.x - 150;
@@ -151,7 +151,7 @@ export class Boss {
              this.game.enemies.push(minion);
           }
         }
-      } else if (this.type === 'boss_nebula_wraith') {
+      } else if (this.type === 'nebula_wraith') {
         this.thrusterTimer += deltaTime;
         if (this.thrusterTimer > 30) {
            this.thrusterFrameIndex = (this.thrusterFrameIndex + 1) % this.thrusterFrames.length;
@@ -231,7 +231,7 @@ export class Boss {
           }
         }
         // Reward unlock
-        if (this.type === 'boss_nebula_wraith') {
+        if (this.type === 'nebula_wraith') {
             // Drop guaranteed weapon upgrades
             this.game.powerups.push(new PowerUp(this.game, this.x, this.y, 'weapon'));
             this.game.powerups.push(new PowerUp(this.game, this.x + 50, this.y, 'weapon'));
@@ -252,7 +252,7 @@ export class Boss {
       if (this.type === 'rock_titan') {
          // slowly rotate
          ctx.rotate(this.stateTimer / 2000);
-      } else if (this.type === 'boss_nebula_wraith') {
+      } else if (this.type === 'nebula_wraith') {
          ctx.globalAlpha = this.alpha;
          ctx.rotate(Math.PI); // flip 180
          
@@ -271,7 +271,7 @@ export class Boss {
       }
       ctx.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
       
-      if (this.type === 'boss_nebula_wraith') {
+      if (this.type === 'nebula_wraith') {
          // Plasma engine core pulse (alive effect)
          const pulse = (Math.sin(this.stateTimer / 150) + 1) / 2; // Oscillates between 0 and 1
          ctx.globalCompositeOperation = 'lighter';
