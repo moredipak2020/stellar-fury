@@ -418,25 +418,40 @@ export class Game {
   }
 
   drawFog(ctx) {
-    if (!this.player) return;
-    const cx = this.player.x;
-    const cy = this.player.y;
-    const r = 250;
+    // Fill the screen with the dark nebula fog color
+    ctx.fillStyle = 'rgba(20, 10, 30, 0.92)';
+    ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     
-    const grad = ctx.createRadialGradient(cx, cy, r * 0.4, cx, cy, r);
-    grad.addColorStop(0, 'rgba(20, 10, 30, 0)');
-    grad.addColorStop(1, 'rgba(20, 10, 30, 0.95)');
+    // Switch to destination-out to "erase" the fog using radial gradients
+    ctx.globalCompositeOperation = 'destination-out';
     
-    ctx.fillStyle = 'rgba(20, 10, 30, 0.95)';
-    ctx.beginPath();
-    ctx.rect(0, 0, this.canvas.width, this.canvas.height);
-    ctx.arc(cx, cy, r, 0, Math.PI * 2, true);
-    ctx.fill();
+    // Player light source (significantly increased radius to 450)
+    if (this.player) {
+      const grad = ctx.createRadialGradient(this.player.x, this.player.y, 100, this.player.x, this.player.y, 450);
+      grad.addColorStop(0, 'rgba(0, 0, 0, 1)');
+      grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(this.player.x, this.player.y, 450, 0, Math.PI * 2);
+      ctx.fill();
+    }
     
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.fill();
+    // Boss light source (Massive aura that illuminates the top of the screen)
+    if (this.bosses && this.bosses.length > 0) {
+      for (let boss of this.bosses) {
+        if (!boss.active) continue;
+        const grad = ctx.createRadialGradient(boss.x, boss.y, 150, boss.x, boss.y, 700);
+        grad.addColorStop(0, 'rgba(0, 0, 0, 0.95)');
+        grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(boss.x, boss.y, 700, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    
+    // Reset composite operation
+    ctx.globalCompositeOperation = 'source-over';
   }
 }
 
